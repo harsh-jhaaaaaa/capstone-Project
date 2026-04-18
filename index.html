@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxury Car Rental</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,sans-serif;background:#0b1120;color:#fff}nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;background:rgba(17,24,39,.9);position:sticky;top:0}.logo{font-size:28px;font-weight:700}.menu a{color:#fff;text-decoration:none;margin:0 12px}.btn{background:linear-gradient(45deg,#3b82f6,#8b5cf6);padding:12px 22px;border:none;border-radius:12px;color:#fff;cursor:pointer}.hero{padding:100px 20px;text-align:center;background:radial-gradient(circle at top,#1e3a8a,#0b1120)}.hero h1{font-size:54px}.hero p{margin:15px 0;color:#cbd5e1}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;padding:40px}.card{background:#111827;padding:20px;border-radius:20px;box-shadow:0 10px 25px rgba(0,0,0,.25);transition:.3s}.card:hover{transform:translateY(-8px)}.price{font-size:22px;margin:10px 0;color:#60a5fa}.footer{text-align:center;padding:25px;color:#94a3b8}input{padding:12px;border-radius:10px;border:none;width:260px;margin:10px}
+</style>
+</head>
+<body>
+<nav><div class='logo'>🚗 Car Rental</div><div class='menu'><a href='#cars'>Cars</a><a href='#book'>Book</a></div><button class='btn'>Login</button></nav>
+<section class='hero'><h1>Rent Your Dream Car</h1><p>Luxury • Affordable • Instant Booking</p><button class='btn' onclick='scrollToCars()'>Explore Cars</button></section>
+<section id='cars' class='grid'></section>
+<section id='book' style='text-align:center;padding:40px'>
+<h2>Quick Booking</h2><br>
+<input id='name' placeholder='Enter your name'>
+<input id='carId' placeholder='Car ID'>
+<button class='btn' onclick='bookNow()'>Book Now</button>
+</section>
+<div class='footer'>© 2026 Luxury Car Rental</div>
+<script>
+const cars=[{id:1,brand:'BMW',model:'X5',price:6500},{id:2,brand:'Audi',model:'A6',price:6000},{id:3,brand:'Mercedes',model:'C-Class',price:7200},{id:4,brand:'Range Rover',model:'Sport',price:9500}];
+const box=document.getElementById('cars');
+cars.forEach(c=>{box.innerHTML+=`<div class='card'><h2>${c.brand} ${c.model}</h2><p class='price'>₹${c.price}/day</p><p>ID: ${c.id}</p><button class='btn' onclick='selectCar(${c.id})'>Rent Now</button></div>`});
+function selectCar(id){document.getElementById('carId').value=id;document.getElementById('book').scrollIntoView({behavior:'smooth'});} 
+function scrollToCars(){document.getElementById('cars').scrollIntoView({behavior:'smooth'});} 
+function bookNow(){const n=document.getElementById('name').value;const id=document.getElementById('carId').value;if(!n||!id){alert('Enter details');return;}alert('Booking Confirmed for '+n+' | Car ID: '+id);} 
+</script>
+<script>
+function loginUser(){alert('Login Coming Soon 🚀');}
+function loadCars(){fetch('http://localhost:5000/cars').then(r=>r.json()).then(data=>{const cars=document.getElementById('cars');cars.innerHTML='';data.forEach(car=>{cars.innerHTML+=`<div class='card'><h2>${car.brand} ${car.model}</h2><p class='price'>₹${car.price_per_day}/day</p><p>ID: ${car.id}</p><button class='btn' onclick='rentCar(${car.id})'>Rent Now</button></div>`})}).catch(()=>alert('Could not load cars from server'));}
+function rentCar(id){fetch('http://localhost:5000/book',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'Harsh',car_id:id})}).then(r=>r.text()).then(msg=>alert(msg)).catch(()=>alert('Booking failed'));}
+window.onload=loadCars;
+</script>
+</body>
+</html>
